@@ -1,0 +1,16 @@
+[Unit]
+Description={{ service_description }}
+Requires={{ service_name }}.socket
+After=network.target
+
+[Service]
+User={{ service_user }}
+Group={{ service_group }}
+ExecStart={{ gunicorn_path }} -b unix:{{ socket_path }} -w {{ gunicorn_nb_workers }} {{ app_module }}
+WorkingDirectory={{ service_working_directory }}
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+

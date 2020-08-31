@@ -1,0 +1,26 @@
+- name: add the unit file for the socket
+  template:
+    src: wsgiapp.socket.j2
+    dest: "/etc/systemd/system/{{ service_name }}.socket"
+  notify:
+    - reload systemd manager configuration
+
+- name: add the unit file for the service
+  template:
+    src: wsgiapp.service.j2
+    dest: "/etc/systemd/system/{{ service_name }}.service"
+  notify:
+    - reload systemd manager configuration
+
+- name: enable and start the socket
+  systemd:
+    name: "{{ service_name }}.socket"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: enable and start the service
+  systemd:
+    name: "{{ service_name }}.service"
+    state: started
+    enabled: yes
